@@ -1,0 +1,27 @@
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "dns"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 3000
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+  [services.concurrency]
+    type = "requests"
+    hard_limit = 300
+    soft_limit = 250
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "3s"
